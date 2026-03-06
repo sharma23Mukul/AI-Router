@@ -5,8 +5,8 @@
  */
 
 const axios = require('axios');
-const pino = require('pino');
-const logger = pino({ name: 'provider-base' });
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('provider-base');
 
 class BaseProvider {
     constructor(name, config = {}) {

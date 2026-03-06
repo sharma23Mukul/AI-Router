@@ -6,8 +6,8 @@
  */
 
 const BaseProvider = require('./base');
-const pino = require('pino');
-const logger = pino({ name: 'provider-gemini' });
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('provider-gemini');
 
 class GeminiProvider extends BaseProvider {
     constructor(apiKey) {

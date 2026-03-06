@@ -6,8 +6,8 @@
  * For tenant requests, validates against hashed keys in DB.
  */
 
-const pino = require('pino');
-const logger = pino({ name: 'auth' });
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auth');
 
 function createAuthMiddleware(tenantManager) {
     return (req, res, next) => {

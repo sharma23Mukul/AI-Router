@@ -6,8 +6,8 @@
  */
 
 const BaseProvider = require('./base');
-const pino = require('pino');
-const logger = pino({ name: 'provider-cohere' });
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('provider-cohere');
 
 class CohereProvider extends BaseProvider {
     constructor(apiKey) {

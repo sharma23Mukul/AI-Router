@@ -6,8 +6,8 @@
  */
 
 const BaseProvider = require('./base');
-const pino = require('pino');
-const logger = pino({ name: 'provider-groq' });
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('provider-groq');
 
 class GroqProvider extends BaseProvider {
     constructor(apiKey) {

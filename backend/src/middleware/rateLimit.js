@@ -5,8 +5,8 @@
  * Global: max concurrent active requests (backpressure).
  */
 
-const pino = require('pino');
-const logger = pino({ name: 'rate-limit' });
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('rate-limit');
 
 // ────────────────────────────────────────────
 // Token Bucket Rate Limiter

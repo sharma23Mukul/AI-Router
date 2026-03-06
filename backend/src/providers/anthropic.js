@@ -8,8 +8,8 @@
 
 const BaseProvider = require('./base');
 const { Transform } = require('stream');
-const pino = require('pino');
-const logger = pino({ name: 'provider-anthropic' });
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('provider-anthropic');
 
 class AnthropicProvider extends BaseProvider {
     constructor(apiKey) {

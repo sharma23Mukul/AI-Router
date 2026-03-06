@@ -5,8 +5,8 @@
  */
 
 const BaseProvider = require('./base');
-const pino = require('pino');
-const logger = pino({ name: 'provider-openai' });
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('provider-openai');
 
 class OpenAIProvider extends BaseProvider {
     constructor(apiKey) {
