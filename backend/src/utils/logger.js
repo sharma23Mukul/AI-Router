@@ -65,23 +65,37 @@ function getWinstonLogger(labelName) {
   const isProduction = process.env.NODE_ENV === 'production';
   const logLevel = process.env.LOG_LEVEL || 'info';
 
+  const { getCorrelationId } = require('../middleware/tracing');
+
+  const addCorrelationId = winston.format((info) => {
+    const correlationId = getCorrelationId();
+    if (correlationId) {
+      info.correlationId = correlationId;
+    }
+    return info;
+  });
+
   const consoleFormat = isProduction
     ? winston.format.combine(
+        addCorrelationId(),
         winston.format.label({ label: labelName }),
         winston.format.timestamp(),
         winston.format.json()
       )
     : winston.format.combine(
+        addCorrelationId(),
         winston.format.label({ label: labelName }),
         winston.format.colorize(),
         winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-        winston.format.printf(({ timestamp, label, level, message, ...meta }) => {
+        winston.format.printf(({ timestamp, label, level, message, correlationId, ...meta }) => {
           const metaStr = Object.keys(meta).length ? ` ${JSON.stringify(meta)}` : '';
-          return `[${timestamp}] [${label}] ${level}: ${message}${metaStr}`;
+          const traceStr = correlationId ? ` [${correlationId}]` : '';
+          return `[${timestamp}] [${label}]${traceStr} ${level}: ${message}${metaStr}`;
         })
       );
 
   const fileFormat = winston.format.combine(
+    addCorrelationId(),
     winston.format.label({ label: labelName }),
     winston.format.timestamp(),
     winston.format.json()
@@ -91,6 +105,7 @@ function getWinstonLogger(labelName) {
     level: logLevel,
     levels: winston.config.npm.levels,
     format: winston.format.combine(
+      addCorrelationId(),
       winston.format.errors({ stack: true }),
       winston.format.splat(),
       winston.format.json()
