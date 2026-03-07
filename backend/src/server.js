@@ -20,7 +20,6 @@ validateEnv();
 
 const express = require('express');
 const cors = require('cors');
-const { v4: uuidv4 } = require('uuid');
 const { createLogger } = require('./utils/logger');
 
 // ────────────────────────────────────────────
@@ -43,6 +42,7 @@ const GroqProvider = require('./providers/groq');
 const CohereProvider = require('./providers/cohere');
 
 // Middleware
+const { tracingMiddleware } = require('./middleware/tracing');
 const { createAuthMiddleware } = require('./middleware/auth');
 const { createRateLimitMiddleware, getActiveRequests, MAX_CONCURRENT } = require('./middleware/rateLimit');
 
@@ -105,6 +105,7 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
 // Middleware
+app.use(tracingMiddleware);
 app.use(createAuthMiddleware(tenantManager));
 app.use(createRateLimitMiddleware());
 
@@ -160,7 +161,7 @@ app.get('/ready', (req, res) => {
 // Main proxy endpoint — OpenAI-compatible
 // ────────────────────────────────────────────
 app.post('/v1/chat/completions', async (req, res) => {
-    const requestId = uuidv4();
+    const requestId = req.correlationId;
     const startTime = Date.now();
 
     try {
