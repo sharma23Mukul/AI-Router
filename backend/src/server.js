@@ -33,6 +33,7 @@ const SemanticCache = require('./services/cache');
 const RLEngine = require('./services/rlEngine');
 const TenantManager = require('./services/tenantManager');
 const Benchmarker = require('./services/benchmarker');
+const { toCSV } = require('./services/csvExport');
 
 // Providers
 const OpenAIProvider = require('./providers/openai');
@@ -640,6 +641,19 @@ app.get('/api/stats', (req, res) => {
     } catch (err) {
         logger.error({ err: err.message }, 'Stats query failed');
         res.status(500).json({ error: 'Failed to fetch stats' });
+    }
+});
+
+app.get('/api/stats/export', (req, res) => {
+    try {
+        const recentLogs = statements.getRecentRequests.all();
+        const csv = toCSV(recentLogs);
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', 'attachment; filename="analytics.csv"');
+        res.send(csv);
+    } catch (err) {
+        logger.error({ err: err.message }, 'CSV export failed');
+        res.status(500).json({ error: 'Failed to export CSV' });
     }
 });
 
