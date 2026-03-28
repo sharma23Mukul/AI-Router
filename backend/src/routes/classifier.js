@@ -1,0 +1,1 @@
+module.exports = (app) => { app.post("/classify", (req, res) => res.json({})); };
