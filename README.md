@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🌿 Frugal AI Router
+#AI Router
 
 **An intelligent proxy layer that routes AI requests to the most resource-efficient model based on task complexity, cost, and sustainability metrics.**
 
@@ -19,22 +19,22 @@
 
 ---
 
-## 🎯 The Vision
+## The Vision
 
 The **Frugal AI Router** aims to reduce AI API costs and carbon footprint without sacrificing performance. It acts as a smart proxy layer between your application and various LLM providers. By analyzing the complexity of incoming prompts, it intelligently selects the right model for the job—using cheaper, smaller models for simple tasks and reserving large, expensive models for complex reasoning.
 
-## ✨ Features
+##  Features
 
-- 🧠 **Smart Routing**: Intelligently routes requests based on task complexity (Simple vs. Complex).
-- 💰 **Cost Tracking**: Estimates API costs for each request and calculates savings.
-- 🌱 **Energy Tracking**: Estimates carbon footprint (CO2) and energy usage for a greener AI footprint.
-- ⚙️ **Configurable Strategies**:
+- **Smart Routing**: Intelligently routes requests based on task complexity (Simple vs. Complex).
+- **Cost Tracking**: Estimates API costs for each request and calculates savings.
+- **Energy Tracking**: Estimates carbon footprint (CO2) and energy usage for a greener AI footprint.
+- **Configurable Strategies**:
   - `cost-first`: Prioritizes the most cost-effective model.
   - `green-first`: Prioritizes the most energy-efficient model.
   - `performance-first`: Prioritizes capability and accuracy.
-- 📊 **Real-time Dashboard**: Visualize your savings and routing decisions with a sleek React frontend.
+- **Real-time Dashboard**: Visualize your savings and routing decisions with a sleek React frontend.
 
-## 🏗️ Architecture
+## Architecture
 
 The project consists of a Node.js/Express backend and a React/Vite frontend.
 
@@ -57,14 +57,14 @@ graph LR
    - Configuration panel for adjusting routing strategies on the fly.
    - Built-in chat playground for testing prompts.
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) (v18 or higher)
 - (Optional) [Docker](https://www.docker.com/) and Docker Compose
 
-### 🐳 Option 1: Run with Docker (Recommended)
+###  Option 1: Run with Docker (Recommended)
 
 The easiest way to get started is using Docker Compose:
 
@@ -79,7 +79,7 @@ docker-compose up --build
 
 Access the dashboard at `http://localhost:5173`.
 
-### 💻 Option 2: Run Locally
+###  Option 2: Run Locally
 
 1. **Clone the repository**:
    ```bash
@@ -106,7 +106,7 @@ Access the dashboard at `http://localhost:5173`.
    ```
    *Open `http://localhost:5173` in your browser.*
 
-## 🧪 Testing the Router
+##  Testing the Router
 
 1. Open the **Dashboard** in your browser.
 2. Select a routing strategy (e.g., "Cost First" or "Green First").
@@ -115,7 +115,7 @@ Access the dashboard at `http://localhost:5173`.
    - **Try a complex prompt**: *"Write a Python script to implement a distributed consensus algorithm."* 👉 Should route to a more capable model.
 4. Watch the **"Est. Cost Saved"** and **"Est. Energy Saved"** metrics update in real-time!
 
-## 🤝 Contributing
+##  Contributing
 
 We welcome contributions! If you have ideas for better complexity analysis, more provider integrations, or UI improvements, please open an issue or submit a pull request.
 
