@@ -1,52 +1,46 @@
-# Environment & secrets
+# Local secrets and configuration
 .env
 .env.*
 !.env.example
+backend/firebase-adminsdk.json
+*service-account*.json
 
-# Node
-node_modules/
-npm-debug.log*
-yarn-error.log*
-
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.venv/
-venv/
-*.egg-info/
-dist/
-build/
-
-# Database (local only)
-*.sqlite
-*.sqlite3
+# Local state and generated files
+backend/data/
+backend/.model_cache/
 *.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.bak
+*.log
+*.zip
+*.pdf
+*.docx
+node_modules/
+dist/
+.venv/
+.deps/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+coverage/
+*.local
 
-# OS
+# Editor and operating system files
+.vscode/
+.idea/
 .DS_Store
 Thumbs.db
 
-# Editor
-.vscode/settings.json
-.idea/
-*.swp
-
-# Logs
-logs/
-*.log
-
-# Test coverage
-coverage/
-.nyc_output/
-
-# Build output
-frontend/dist/
-frontend/build/
-
-# PRIVATE — never push
-_learning/
-*.private.md
-NOTES.md
-TODO_private.md
+# Historical local handoff and analysis documents
+DECISIONS.md
+PROJECT_CONTEXT.md
+TESTER_SETUP.md
+backend/DECISIONS.md
+backend/test_diag.png
+build_deployment_zip.py

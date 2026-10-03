@@ -1,1 +1,0 @@
-module.exports = { getFallback: (strat) => ["gpt-4o", "gemini-1.5-flash"] };
