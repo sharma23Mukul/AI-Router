@@ -1,0 +1,93 @@
+# OptiRoute Configuration
+# API keys are loaded from environment variables, not stored here.
+
+# Server settings
+server:
+  host: "0.0.0.0"
+  port: 8000
+  api_token: null  # Set to a string to enable simple bearer-token auth (C7)
+
+# Model tier definitions
+# Each tier has a name, a list of models (with provider info), and cost metadata.
+# Models within a tier are ranked for each request; list order breaks ties.
+#
+# NOTE: Actual inference runs on Groq Cloud's free tier via their OpenAI-compatible
+# endpoint. Cost figures simulate OpenAI pricing for meaningful demo/benchmark.
+tiers:
+  light:
+    description: "Fast, cheap models for simple queries"
+    models:
+      - id: "openai/gpt-oss-20b"
+        provider: "groq"
+        api_base: "https://api.groq.com/openai/v1"
+        api_key_env: "GROQ_API_KEY"
+        cost_per_1k_input: 0.00015     # Simulated pricing
+        cost_per_1k_output: 0.0006     
+        max_tokens: 8192
+        supports_function_calling: true
+        supports_json_mode: true
+
+  mid:
+    description: "Balanced cost/quality for moderate tasks"
+    models:
+      - id: "qwen/qwen3.8-27b"
+        provider: "groq"
+        api_base: "https://api.groq.com/openai/v1"
+        api_key_env: "GROQ_API_KEY"
+        cost_per_1k_input: 0.0025      # Simulated pricing
+        cost_per_1k_output: 0.01       
+        max_tokens: 8192
+        supports_function_calling: true
+        supports_json_mode: true
+
+  heavy:
+    description: "Frontier models for complex reasoning tasks"
+    models:
+      - id: "openai/gpt-oss-120b"
+        provider: "groq"
+        api_base: "https://api.groq.com/openai/v1"
+        api_key_env: "GROQ_API_KEY"
+        cost_per_1k_input: 0.002       # Simulated pricing
+        cost_per_1k_output: 0.008      
+        max_tokens: 8192
+        supports_function_calling: true
+        supports_json_mode: true
+
+# Routing rules (Phase 1 — placeholder structure, will be populated in Phase 1)
+routing:
+  default_tier: "light"
+  rules: []
+
+# Failover settings (Phase 2 — placeholder)
+failover:
+  timeout_seconds: 30
+  max_retries: 2
+  consecutive_failures_to_mark_down: 3
+  health_check_interval_seconds: 60
+
+# Escalation settings (Phase 3 — placeholder)
+escalation:
+  max_escalations: 2
+  enabled: true
+
+# Context pruning settings (Phase 4 — placeholder)
+pruning:
+  enabled: true
+  max_tool_output_tokens: 2000
+  strategy: "truncate"  # truncate | summarize
+
+# Caching settings (Phase 5 — placeholder)
+caching:
+  enabled: true
+  exact_match: true
+  semantic:
+    enabled: true
+    similarity_threshold: 0.92
+    max_cache_size: 1000
+
+# Budget settings (Phase 6 — placeholder)
+budgets:
+  enabled: true
+  default_max_tokens: null
+  default_max_cost_usd: null
+  exceed_action: "downgrade"  # downgrade | reject
