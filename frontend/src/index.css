@@ -1,47 +1,176 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Radio+Canada+Big:wght@400;500;700&family=Source+Serif+Pro:wght@400;700&display=swap');
+
+/* Geist Mono from jsDelivr */
+@import url('https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-mono/style.css');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* Page gradient */
+    --color-page-gradient-start: #A8D3FF;
+    --color-page-gradient-end: #FFF4DF;
+
+    /* Text */
+    --color-text-primary: #000000;
+    --color-text-muted: #6C6C6C;
+
+    /* Backgrounds */
+    --color-soft-bg: #F6F8FB;
+    --color-border-divider: #DBE0EC;
+    --color-cream: #FDF3DF;
+
+    /* Accent */
+    --color-accent-yellow: #FFF546;
+    --color-olive-label: #66640F;
+    --color-cta-olive-dark: #756F0B;
+
+    /* Dashboard blues */
+    --color-dash-blue-1: #AED5FC;
+    --color-dash-blue-2: #AFD5FB;
+    --color-dash-blue-3: #A9D3FE;
+
+    /* Dashboard slates */
+    --color-dash-slate-1: #788FA8;
+    --color-dash-slate-2: #546781;
+    --color-dash-slate-3: #94AAC1;
+
+    /* Sampled colors */
+    --color-hero-mid: #A9D4FF;
+    --color-values-warm: #EEE8D7;
+    --color-blog-tag-orange: #FA8800;
+    --color-testimonial-blue: #0568D0;
+
+    /* Login/Prompt card gradients */
+    --color-login-card-top: #A8D3FF;
+    --color-login-card-mid: #C6DEF4;
+    --color-login-card-bottom: #E8EBE7;
+    --color-prompt-card-mid: #C2DDF5;
+    --color-prompt-card-bottom: #E8EBE7;
+
+    /* Dashboard sampled */
+    --color-dash-card-slate: #788FA8;
+    --color-req-grey-card: #94AAC1;
+    --color-scrollbar-thumb: #94AAC1;
+    --color-budget-bg-mid: #CBE0F2;
+    --color-budget-bg-bottom: #F4EFE3;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    min-width: 0;
+  }
+
   body {
-    @apply bg-slate-950 text-slate-50 antialiased selection:bg-blue-500/30;
-    font-feature-settings: "cv11", "ss01";
+    margin: 0;
+    padding: 0;
+    font-family: 'Source Serif Pro', serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--color-text-primary);
+    background: #FFFFFF;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Radio Canada Big', sans-serif;
+  }
+}
+
+@layer components {
+  .page-gradient {
+    background: linear-gradient(180deg, var(--color-page-gradient-start) 0%, var(--color-page-gradient-end) 100%);
+  }
+
+  .login-card-gradient {
+    background: linear-gradient(180deg, var(--color-login-card-top) 0%, var(--color-login-card-mid) 50%, var(--color-login-card-bottom) 100%);
+  }
+
+  .prompt-card-gradient {
+    background: linear-gradient(180deg, var(--color-page-gradient-start) 0%, var(--color-prompt-card-mid) 50%, var(--color-prompt-card-bottom) 100%);
+  }
+
+  .container-site {
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 24px;
+    padding-right: 24px;
   }
 }
 
 @layer utilities {
-  .glass-panel {
-    @apply bg-white/5 backdrop-blur-md border border-white/10 shadow-xl;
+  .font-radio-canada {
+    font-family: 'Radio Canada Big', sans-serif;
   }
 
-  .glass-card {
-    @apply bg-slate-900/50 backdrop-blur-sm border border-white/5 hover:border-white/10 transition-all duration-300;
+  .font-source-serif {
+    font-family: 'Source Serif Pro', serif;
   }
 
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400;
-  }
-
-  .animate-spotlight {
-    animation: spotlight 2s ease .75s 1 forwards;
+  .font-geist-mono {
+    font-family: 'Geist Mono', monospace;
   }
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* Custom scrollbar for dashboard */
+#chat-search::-webkit-search-cancel-button {
+  display: none;
+  -webkit-appearance: none;
 }
 
-::-webkit-scrollbar-track {
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-scrollbar-thumb);
+  border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-dash-slate-2);
+}
+
+.markdown-response .katex-display {
+  margin: 1rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0;
+}
+
+.markdown-response .katex {
+  font-size: 1.08em;
+}
+
+.markdown-response {
+  overflow-wrap: anywhere;
+}
+
+.markdown-response img,
+.markdown-response video,
+.markdown-response svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.markdown-response pre,
+.markdown-response .katex-display {
+  overflow-wrap: normal;
 }
