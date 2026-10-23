@@ -1,141 +1,112 @@
-<div align="center">
+# OptiRoute · AI Router
 
-#AI Router
+[![CI](https://github.com/sharma23Mukul/AI-Router/actions/workflows/ci.yml/badge.svg)](https://github.com/sharma23Mukul/AI-Router/actions/workflows/ci.yml)
 
-**An intelligent proxy layer that routes AI requests to the most resource-efficient model based on task complexity, cost, and sustainability metrics.**
+OptiRoute routes signed-in users' prompts across their connected AI models in **light, mid, and heavy** tiers. A React playground and dashboard sit on a FastAPI backend with user-scoped caching and persistent chat history.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Node.js Version](https://img.shields.io/badge/Node.js-v18+-blue.svg)](https://nodejs.org/)
-[![React Version](https://img.shields.io/badge/React-v18-61DAFB.svg?logo=react)](https://reactjs.org/)
-[![Docker Support](https://img.shields.io/badge/Docker-Supported-2496ED.svg?logo=docker)](https://www.docker.com/)
+## Features
 
-[Features](#-features) •
-[Architecture](#%EF%B8%8F-architecture) •
-[Getting Started](#-getting-started) •
-[Usage](#-testing-the-router) •
-[Contributing](#-contributing)
-
-</div>
-
----
-
-## The Vision
-
-The **Frugal AI Router** aims to reduce AI API costs and carbon footprint without sacrificing performance. It acts as a smart proxy layer between your application and various LLM providers. By analyzing the complexity of incoming prompts, it intelligently selects the right model for the job—using cheaper, smaller models for simple tasks and reserving large, expensive models for complex reasoning.
-
-##  Features
-
-- **Smart Routing**: Intelligently routes requests based on task complexity (Simple vs. Complex).
-- **Cost Tracking**: Estimates API costs for each request and calculates savings.
-- **Energy Tracking**: Estimates carbon footprint (CO2) and energy usage for a greener AI footprint.
-- **Configurable Strategies**:
-  - `cost-first`: Prioritizes the most cost-effective model.
-  - `green-first`: Prioritizes the most energy-efficient model.
-  - `performance-first`: Prioritizes capability and accuracy.
-- **Real-time Dashboard**: Visualize your savings and routing decisions with a sleek React frontend.
+- Firebase email/password and Google sign-in.
+- Provider connections with API keys encrypted using Fernet.
+- Workload-based tier selection, model ranking, fallback, and heavier-answer retries.
+- Background completion jobs with progress polling and cancellation.
+- Exact and semantic caching scoped to each user, with explicit answer selection.
+- Conversation history, Markdown and math rendering, and request charts.
+- SQLite storage with optional Firestore snapshots for a single-instance demo.
 
 ## Architecture
 
-The project consists of a Node.js/Express backend and a React/Vite frontend.
-
 ```mermaid
-graph LR
-    A[Client App] -->|Prompt| B(AI Router Proxy)
-    B --> C{Complexity Analyzer}
-    C -->|Simple Task| D[gpt-3.5-turbo / claude-3-haiku]
-    C -->|Complex Task| E[gpt-4 / claude-3-opus]
-    B -->|Logs & Metrics| F[(SQLite Database)]
-    G[React Dashboard] -->|Reads Metrics| F
+flowchart LR
+    UI[React / Vite] -->|Firebase ID token| API[FastAPI]
+    UI --> Auth[Firebase Authentication]
+    API --> Cache[User-scoped cache]
+    API --> Router[Workload evaluation and model ranking]
+    Router --> Providers[Connected model providers]
+    API --> DB[(SQLite)]
+    DB -. optional snapshots .-> Firestore[(Cloud Firestore)]
 ```
 
-1. **Backend (Node.js/Express)**:
-   - Analyzes prompt complexity using heuristics or a small orchestrator model.
-   - Routes to various providers (`gpt-4`, `gpt-3.5-turbo`, `claude-3-opus`, `claude-3-haiku`).
-   - Logs metrics, costs, and carbon estimations to a local SQLite database.
-2. **Frontend (React/Vite)**:
-   - A beautiful dashboard displaying real-time statistics (Cost & CO2 saved).
-   - Configuration panel for adjusting routing strategies on the fly.
-   - Built-in chat playground for testing prompts.
-
-##  Getting Started
-
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) (v18 or higher)
-- (Optional) [Docker](https://www.docker.com/) and Docker Compose
-
-###  Option 1: Run with Docker (Recommended)
-
-The easiest way to get started is using Docker Compose:
-
-```bash
-# Clone the repository
-git clone https://github.com/sharma23Mukul/ai-router.git
-cd frugal-ai-router
-
-# Build and run the containers
-docker-compose up --build
+```text
+AI-Router/
+├── .github/workflows/     # Frontend and backend CI
+├── backend/
+│   ├── optiroute/         # API, auth, connections, storage, provider proxy
+│   │   └── engine/        # Routing, ranking, caching, context processing
+│   ├── scripts/          # Embedding-model preloading
+│   ├── tests/            # Backend regression tests
+│   ├── config.yaml       # Routing defaults and example tiers
+│   └── requirements*.txt # Runtime and development dependencies
+├── frontend/
+│   ├── public/           # Static assets
+│   └── src/              # Pages, components, auth utilities, styles
+└── docs/                 # Architecture and deployment guides
 ```
 
-Access the dashboard at `http://localhost:5173`.
+## Local development
 
-###  Option 2: Run Locally
+Use **Node.js 24.12.x** (`frontend/.node-version`) and **Python 3.12** (`backend/.python-version`). Firebase dependencies require Node 24.12 or newer. You also need a Firebase project with Email/Password and/or Google authentication enabled, and credentials for a supported model provider.
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/sharma23Mukul/ai-router.git
-   cd frugal-ai-router
-   ```
+### Backend
 
-2. **Backend Setup**:
-   ```bash
-   cd backend
-   npm install
-   # Create a .env file if you want to use custom API keys
-   # (Defaults/mock responses are provided in the code for demo purposes)
-   npm start
-   ```
-   *The backend server will run on `http://localhost:3000`.*
+From the repository root:
 
-3. **Frontend Setup**:
-   Open a new terminal window:
-   ```bash
-   cd frontend
-   npm install
-   npm run dev
-   ```
-   *Open `http://localhost:5173` in your browser.*
+```sh
+cd backend
+python -m venv .venv
+```
 
-##  Testing the Router
+Activate with `.venv\Scripts\Activate.ps1` in PowerShell or `source .venv/bin/activate` on macOS/Linux. Then:
 
-1. Open the **Dashboard** in your browser.
-2. Select a routing strategy (e.g., "Cost First" or "Green First").
-3. Enter a prompt in the **Playground**:
-   - **Try a simple prompt**: *"Translate 'hello' to French."* 👉 Should route to a smaller, cheaper model.
-   - **Try a complex prompt**: *"Write a Python script to implement a distributed consensus algorithm."* 👉 Should route to a more capable model.
-4. Watch the **"Est. Cost Saved"** and **"Est. Energy Saved"** metrics update in real-time!
+```sh
+python -m pip install -r requirements-dev.txt
+python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+```
 
-##  Contributing
+Copy `backend/.env.example` to `backend/.env`. Set `FIREBASE_PROJECT_ID` and paste the generated key into `WORKFLOW_ENCRYPTION_KEY`. Keep this key stable: existing encrypted provider credentials depend on it. Leave Firestore persistence disabled for ordinary local development.
 
-We welcome contributions! If you have ideas for better complexity analysis, more provider integrations, or UI improvements, please open an issue or submit a pull request.
+```sh
+python -m uvicorn optiroute.main:app --host 127.0.0.1 --port 8000 --reload
+```
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+The API creates `backend/data/optiroute.db`. Health: <http://127.0.0.1:8000/health>. Interactive API reference: <http://127.0.0.1:8000/docs>.
 
-## 📜 License
+### Frontend
 
-Distributed under the MIT License. See `LICENSE` for more information.
+In another terminal:
 
----
-<div align="center">
-Made with ❤️ for a sustainable AI future.
-</div>
+```sh
+cd frontend
+npm ci
+```
 
-<!-- Verified for Release v1.0 [Jan 30 2026] -->
-<!-- Verified for Release v1.0 [Jan 30 2026] -->
-<!-- Verified for Release v1.0 [Jan 30 2026] -->
+Copy `frontend/.env.example` to `frontend/.env`. Fill in the four `VITE_FIREBASE_*` values from your Firebase web app settings. The example API URL points to the local backend. Add your development hostname to Firebase Authentication's authorized domains.
 
-# Updated Roadmap Progress
+```sh
+npm run dev
+```
+
+Open the URL printed by Vite (usually <http://localhost:5173>). Sign in, add models and provider keys on **Routing Policies**, then send a prompt in the **Playground**. Example models in `config.yaml` do not replace user connections. The first semantic-cache operation may download embedding weights; preload them with `python scripts/preload_embeddings.py` from `backend/` if needed.
+
+## Checks
+
+```sh
+# backend/ with the virtual environment activated
+python -m pytest
+
+# frontend/
+npm run lint
+npm run build
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for test conventions and offline versus live checks.
+
+Known lint, bundle-size, and dependency-audit findings are recorded in [validation notes](docs/quality.md).
+
+## Deployment and limitations
+
+Follow the [deployment guide](docs/deployment.md) for backend and static frontend configuration. Read the [architecture notes](docs/architecture.md) for request flow and persistence details.
+
+This is a single-instance application. SQLite and optional Firestore snapshots are not a multi-writer database architecture, and in-memory jobs do not survive restarts. Example pricing in `config.yaml` is simulated, not a billing guarantee. Production scaling needs shared durable storage, a durable job queue, and operational testing.
+
+Environment files, service-account credentials, databases, model weights, dependencies, and build output are excluded from Git. See [SECURITY.md](SECURITY.md) for credential handling.
